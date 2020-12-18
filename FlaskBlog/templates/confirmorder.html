@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <div class="content-section">
+        <form method="post" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Purchase</legend>
+
+                <div class="form-group">
+                    {{ form.delivery.label(class="form-control-label") }}
+
+                    {% if form.delivery.errors %}
+                        {{ form.delivery(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.delivery.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.delivery(class="form-control form-control-lg") }}
+                    {% endif %}
+
+                </div>
+            </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+        </form>
+    </div>
+
+
+
+
+    <div class="border-top pt-3">
+    <small class="text-muted">
+        Need an account? <a class="ml-2" href="{{ url_for('home') }}">Sign Up Now</a>
+    </small>
+    </div>
+
+
+      <div class="card mb-4">
+          <h5 class="card-header">Confirm Purchase</h5>
+          <div class="card-body">
+
+
+
+            <p>To Buy the item please fill in credit card information.</p>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="card h-100">
+                      <h3 class="card-header">{{ product.name }}</h3>
+
+                      <ul class="list-group list-group-flush">
+
+                        <li class="list-group-item">{{ product.descr }}</li>
+                        <li class="list-group-item">{{ product.price }}<h2>€</h2>per week</li>
+                      </ul>
+                    </div>
+                </div>
+
+
+
+
+              <div class="reg-right">
+            <h3>Credit Card Information</h3>
+            <ul>
+                <p class="text-info">Card Holder Name: </p>
+                <p><input id="card_holder_name" type="text" value="JohnSmith" /></p>
+            </ul>
+            <ul>
+                <p class="text-info">Card Number: </p>
+                <p><input id="card_number" type="text" value="4242424242424242" data-stripe="number"/></p>
+            </ul>
+            <ul>
+                <p class="text-info">CVC: </p>
+                <p><input id="cvc" type="text" value="123" data-stripe="cvc"/></p>
+            </ul>
+            <ul>
+                <p class="text-info">Expiry Date: </p>
+                <p>
+                    Month: <input type="text" value="12" style="width: 100px;" data-stripe="exp-month"/>
+                    Year: <input type="text" value="2017" style="width: 100px;" data-stripe="exp-year"/>
+                </p>
+            </ul>
+            <p style="display: none;" id="card_error_message"></p>
+
+                  <a href="{{ url_for('home') }}" class="btn btn-primary">Place Order</a>
+
+            <p class="click">By clicking this button, you agree to the  <a href="#">Policy Terms and Conditions.</a></p>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+{% endblock content %}

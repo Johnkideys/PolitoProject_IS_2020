@@ -16,6 +16,16 @@
   <!-- Custom styles for this template -->
    <link href="{{ url_for('static',filename='css/modern-business.css') }}" rel="stylesheet">
 
+
+
+    <style>
+        body{
+                background-image:url("{{ url_for('static',filename='Pics/emrata1.jpg') }}");
+                background-attachment: fixed;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+    </style>
 </head>
 
 <body>
@@ -35,27 +45,42 @@
           </div>
               <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'user' %}
                     <li class="nav-item active dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Cities
                         </a>
+
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                          <a class="dropdown-item" href="cities.html">Torino</a>
-                          <a class="dropdown-item active" href="cities.html">Cuneo</a>
-                          <a class="dropdown-item" href="cities.html">Asti</a>
+                          <a class="dropdown-item" href="">Torino</a>
+                          <a class="dropdown-item active" href="">Cuneo</a>
+                          <a class="dropdown-item" href="">Asti</a>
                         </div>
                     </li>
                     <a class="nav-item nav-link" href="{{ url_for('home') }}">Shop Now</a>
+                      {% endif %}
+
                     <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                      {% if current_user.role == 'producer' %}
-                    <a class="nav-item nav-link" href="{{ url_for('create_farm') }}">Farm Details</a>
+
+                         <li class="nav-item active dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Farm Details
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
+                                  <a class="dropdown-item" href="{{ url_for('create_farm') }}">Create Farm</a>
+                                  <a class="dropdown-item active" href="">Update Farm</a>
+                                  <a class="dropdown-item" href="{{ url_for('add_products_farm') }}">Add Products To Farm</a>
+                                </div>
+                        </li>
                      {% endif %}
                     <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
                     <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
 
                 {% else %}
                     <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                    <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+                    <a class="nav-item nav-link" href="{{ url_for('registeruser') }}">Register as User</a>
+                    <a class="nav-item nav-link" href="{{ url_for('registerproducer') }}">Register as Producer</a>
                 {% endif %}
             </div>
     </div>

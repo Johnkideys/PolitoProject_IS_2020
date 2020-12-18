@@ -1,5 +1,43 @@
 {% extends 'layout.html' %}
 {% block content %}
+
+              <!-- My Orders Dropdown Page HERE -->
+
+    <div class="mb-4" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="card">
+        <div class="card-header" role="tab" id="headingOne">
+          <h5 class="mb-0">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">My Orders</a>
+          </h5>
+        </div>
+
+        <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+          <div class="card-body">
+            {% if purchaseinfo %}
+
+                {% for purchased in purchaseinfo %}
+                    {% for post in posts %}
+                        {% for product in products %}
+
+                               {% if purchased.post_id == post.id and purchased.good_id == product.id %}
+                                        <h5>You have an order: From->{{ post.title }}, Item->{{ product.name }}, Delivery method->{{ purchased.delivery }} </h5>
+                               {% endif%}
+
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+
+            {% else %}
+                <p>you don't have orders</p>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+          <!-- Profile pic HERE -->
+
     <div class="content-section">
       <div class="media">
         <img class="rounded-circle account-img" src={{ image_file }}>
@@ -58,4 +96,9 @@
             </div>
         </form>
     </div>
+
+
+
+
+
 {% endblock %}

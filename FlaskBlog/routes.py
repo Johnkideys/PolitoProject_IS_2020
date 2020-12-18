@@ -2,9 +2,9 @@ import os
 import secrets
 from PIL import Image
 from flask import render_template, url_for, redirect, flash, request, abort, session
-from FlaskBlog import app, db, bcrypt, photos
-from FlaskBlog.forms import RegistrationForm, LoginForm, RetailerProductsForm, UpdateAccountForm, UploadForm
-from FlaskBlog.models import User, Post
+from FlaskBlog import app, db, bcrypt
+from FlaskBlog.forms import RegistrationForm, LoginForm, RetailerForm, UpdateAccountForm, UpdateProductsForm, PurchaseForm
+from FlaskBlog.models import User, Post, ProductItem, PurchaseInfo
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -12,6 +12,19 @@ from flask_login import login_user, current_user, logout_user, login_required
 #this is my change
 #this is my 2nd change
 #this is my 3rd change
+from functools import wraps
+def producer_required(func):
+    """
+    Modified login_required decorator to restrict access to admin group.
+    """
+
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.role != "producer":
+            flash("You don't have permission to access this resource.", "warning")
+            return redirect(url_for("home"))
+        return func(*args, **kwargs)
+    return decorated_view
 
 
 
@@ -26,14 +39,29 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/register', methods=['GET','POST'])
-def register():
+@app.route('/registeruser', methods=['GET','POST'])
+def registeruser():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, role=form.role.data)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, role='user')
+        db.session.add(user)
+        db.session.commit()
+        flash('Account is created, you can now Sign In!','success')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+@app.route('/registerproducer', methods=['GET','POST'])
+def registerproducer():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, role='producer')
         db.session.add(user)
         db.session.commit()
         flash('Account is created, you can now Sign In!','success')
@@ -68,7 +96,7 @@ def save_picture(form_picture):
     picture_path = os.path.join(app.root_path, 'static/Pics', picture_fn)
     form_picture.save(picture_path)
 
-    output_size = (125, 125)
+    output_size = (325, 325)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
@@ -79,6 +107,12 @@ def save_picture(form_picture):
 @login_required
 def account():
     form = UpdateAccountForm()
+    purchaseinfo = PurchaseInfo.query.filter_by(user_id=current_user.id).all()
+    #products = ProductItem.query.filter_by(user_id=current_user.id).all()
+    products = ProductItem.query.all()
+    posts = Post.query.all()
+
+
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
@@ -88,43 +122,97 @@ def account():
         current_user.email = form.email.data
         db.session.commit()
         flash('Your account has been updated', 'success')
+
         return redirect(url_for('account'))
-
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
     image_file = url_for('static', filename='Pics/' + current_user.image_file)
-    return render_template('account.html', title= 'Account', image_file=image_file, form=form)
+    return render_template('account.html', title='Account', image_file=image_file, form=form, purchaseinfo=purchaseinfo, posts=posts, products=products)
 
 
-""" 
+
 @app.route('/create_farm', methods=['GET','POST'])
 @login_required
+@producer_required
 def create_farm():
-    if not current_user.is_Producer():
+    if current_user.check == True:
+        flash('You already created a farm', 'danger')
         return redirect(url_for('home'))
-    form = RetailerProductsForm()
+    picture_file = "farm_pic.jpg"
+    form = RetailerForm()
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
         post = Post(title=form.title.data, content=form.content.data, image_farm_file=picture_file, author=current_user)
+
         db.session.add(post)
+        current_user.check = 1
         db.session.commit()
-        flash('your farm products page has been created', 'success')
-        image_farm_file = url_for('static', filename='Pics/' + picture_file)
+        flash('Your farm products page has been created!', 'success')
+
+        image_farm_file = url_for('static', filename='Pics/' + post.image_farm_file)
         return redirect(url_for('home', image=image_farm_file))
+    elif request.method == 'GET':
+        if Post.query.filter_by(user_id=current_user.id).first():
+            post1 = Post.query.filter_by(user_id=current_user.id).first()
+            form.title.data = post1.title
+            form.content.data = post1.content
 
-    image_farm_file = url_for('static', filename='Pics/' + post.image_farm_file)
-    return render_template('create_retailer.html', form=form, image=image_farm_file)
+    return render_template('create_retailer.html', form=form)
 """
-
+@app.route('/update_farm', methods=['GET','POST'])
+@login_required
+@producer_required
+def update_farm():
+    return render_template('')
+"""
+@app.route('/add_products_farm', methods=['GET','POST'])
+@login_required
+@producer_required
+def add_products_farm():
+    form = UpdateProductsForm()
+    if form.validate_on_submit():
+        product = ProductItem(name=form.name.data, descr=form.descr.data, price=form.price.data, producer=current_user)
+        db.session.add(product)
+        db.session.commit()
+        flash('Your farm products have been updated!', 'success')
+        post = Post.query.filter_by(user_id=current_user.id).first()
+        return redirect(url_for('post', post_id=post.id))
+    return render_template('create_retailer_products.html', form=form)
 
 
 @app.route('/post/<int:post_id>')
+@login_required
 def post(post_id):
+
     post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
+    products = ProductItem.query.all()
+    specific_products=[]
+    for product in products:
+        if product.user_id == post.user_id:
+            specific_products.append(product)
+
+    return render_template('post.html', title=post.title, post=post, specific_products=specific_products)
+
+@app.route('/confirmorder/<int:product_id>/<int:post_id>', methods=['GET','POST'])
+@login_required
+def confirmorder(product_id, post_id):
+    product = ProductItem.query.get_or_404(product_id)
+    post = Post.query.get_or_404(post_id)
+    form = PurchaseForm()
+    if form.validate_on_submit():
+        purchaseinfo = PurchaseInfo(delivery=form.delivery.data, buyer=current_user, farm_that_sold=post, product_name=product)
+        db.session.add(purchaseinfo)
+        db.session.commit()
+        flash('Succesfully Purchased!', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('confirmorder.html', product=product, form=form)
 
 
 
-
+"""
 @app.route("/upload",methods=["POST","GET"])
 def upload():
     if not os.path.exists('static/'+ str(session.get('id'))):
@@ -137,3 +225,4 @@ def upload():
         filename = photos.save(formupload.file.data, name=str(session.get('id'))+'.jpg', folder=str(session.get('id')))
         file_url.append(filename)
     return render_template("upload.html", formupload=formupload, filelist=file_url)
+"""

@@ -12,7 +12,6 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
-    role = StringField('Role', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
 
 
@@ -24,7 +23,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-class RetailerProductsForm(FlaskForm):
+class RetailerForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators = [DataRequired()])
     picture = FileField('Update Farm Picture', validators=[FileAllowed(['png', 'jpg'])])
@@ -44,6 +43,12 @@ class UpdateAccountForm(FlaskForm):
         if user:
             raise ValidationError('That username is taken. Please choose another one.')
 
-class UploadForm(FlaskForm):
-    file = FileField('file', validators=[DataRequired()])
-    upload = SubmitField('upload')
+class UpdateProductsForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    descr = TextAreaField('Description', validators = [DataRequired()])
+    price = IntegerField('Price', validators=[DataRequired()])
+    submit = SubmitField('Confirm')
+
+class PurchaseForm(FlaskForm):
+    delivery = StringField('DeliveryOption', validators=[DataRequired()])
+    submit = SubmitField('Confirm')
