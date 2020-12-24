@@ -52,3 +52,8 @@ class UpdateProductsForm(FlaskForm):
 class PurchaseForm(FlaskForm):
     delivery = StringField('DeliveryOption', validators=[DataRequired()])
     submit = SubmitField('Confirm')
+
+class CommentForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    comment = TextAreaField('Comment', validators = [DataRequired()])
+    submit = SubmitField('Confirm')

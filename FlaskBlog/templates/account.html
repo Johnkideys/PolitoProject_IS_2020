@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
+        {% if current_user.role == 'user' %}
               <!-- My Orders Dropdown Page HERE -->
 
     <div class="mb-4" id="accordion" role="tablist" aria-multiselectable="true">
@@ -20,7 +21,10 @@
                         {% for product in products %}
 
                                {% if purchased.post_id == post.id and purchased.good_id == product.id %}
+                                    <li class="list-group-item">
                                         <h5>You have an order: From->{{ post.title }}, Item->{{ product.name }}, Delivery method->{{ purchased.delivery }} </h5>
+                                        <a href="{{ url_for('comments', post_id=post.id) }}" class="btn btn-primary">Leave a Comment</a>
+                                    </li>
                                {% endif%}
 
                         {% endfor %}
@@ -35,6 +39,7 @@
         </div>
       </div>
     </div>
+        {% endif %}
 
           <!-- Profile pic HERE -->
 
@@ -96,9 +101,5 @@
             </div>
         </form>
     </div>
-
-
-
-
 
 {% endblock %}

@@ -36,10 +36,47 @@
                 </div>
 
             {% endfor %}
-
-
-
             </div>
+
+
+  <legend class="border-bottom mb-4"><h2>Comments</h2></legend>
+{% for purchase in purchased %}
+{% if current_user.id == purchase.user_id and purchase.post_id == post.id %}
+
+           <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Leave a Comment:</h5>
+          <div class="card-body">
+            <form>
+                <a href="{{ url_for('comments', post_id=post.id) }}" class="btn btn-primary">Leave a Comment</a>
+            </form>
+          </div>
+        </div>
+
+{% endif %}
+{% endfor %}
+
+            {% for com in comments %}
+                <!-- Single Comment -->
+                <div class="media mb-4">
+                  <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                  <div class="media-body">
+                    <h5 class="mt-0">{{ com.title_comment }}</h5>
+                  {{ com.comment }}
+                  </div>
+                </div>
+            {% endfor %}
+
+
+
+          </div>
+        </div>
+          </div>
+
+
+
+
+
           </div>
         </div>
 

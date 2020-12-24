@@ -1,43 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-    <div class="content-section">
-        <form method="post" action="">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Purchase</legend>
-
-                <div class="form-group">
-                    {{ form.delivery.label(class="form-control-label") }}
-
-                    {% if form.delivery.errors %}
-                        {{ form.delivery(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.delivery.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.delivery(class="form-control form-control-lg") }}
-                    {% endif %}
-
-                </div>
-            </fieldset>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-outline-info") }}
-                </div>
-        </form>
-    </div>
-
-
-
-
-    <div class="border-top pt-3">
-    <small class="text-muted">
-        Need an account? <a class="ml-2" href="{{ url_for('home') }}">Sign Up Now</a>
-    </small>
-    </div>
-
 
       <div class="card mb-4">
           <h5 class="card-header">Confirm Purchase</h5>
@@ -59,8 +22,7 @@
                     </div>
                 </div>
 
-
-
+              <!-- Credit Card info HERE -->
 
               <div class="reg-right">
             <h3>Credit Card Information</h3>
@@ -83,36 +45,42 @@
                     Year: <input type="text" value="2017" style="width: 100px;" data-stripe="exp-year"/>
                 </p>
             </ul>
-            <p style="display: none;" id="card_error_message"></p>
-
-                  <a href="{{ url_for('home') }}" class="btn btn-primary">Place Order</a>
-
-            <p class="click">By clicking this button, you agree to the  <a href="#">Policy Terms and Conditions.</a></p>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+              </div>
           </div>
-        </div>
+
+       <!-- Delivery Option HERE -->
+
+            <div class="content-section">
+                <form method="post" action="">
+                    {{ form.hidden_tag() }}
+                    <fieldset class="form-group">
 
 
+                        <div class="form-group">
+                            {{ form.delivery.label(class="form-control-label") }}
+                            <label> , Type Delivery for Delivery! : </label>
 
+                            {% if form.delivery.errors %}
+                                {{ form.delivery(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.delivery.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.delivery(class="form-control form-control-lg") }}
+                            {% endif %}
 
+                        </div>
+                    </fieldset>
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-outline-info") }}
+                        <p class="click">By clicking this button, you agree to the  <a href="#">Policy Terms and Conditions.</a></p>
+                        </div>
 
-
+                </form>
+            </div>
+      </div>
 
 
 

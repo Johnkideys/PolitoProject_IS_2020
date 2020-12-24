@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
     products = db.relationship('ProductItem', backref='producer', lazy=True)
     userorders = db.relationship('PurchaseInfo', backref='buyer', lazy=True)
+    usercomments = db.relationship('Comments', backref='personwhocommented', lazy=True)
 
     def __repr__(self):
         return "User(%r, %r, %r)" % (self.username, self.email, self.image_file)
@@ -33,6 +34,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user_order_farms = db.relationship('PurchaseInfo', backref='farm_that_sold', lazy=True)
+    user_order_comment_farms = db.relationship('Comments', backref='farm_got_commented', lazy=True)
 
 
     def __repr__(self):
@@ -60,3 +62,10 @@ class PurchaseInfo(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     good_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+
+class Comments(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title_comment = db.Column(db.String(100), nullable=False)
+    comment = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)

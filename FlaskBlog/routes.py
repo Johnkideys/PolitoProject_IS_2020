@@ -3,8 +3,8 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, redirect, flash, request, abort, session
 from FlaskBlog import app, db, bcrypt
-from FlaskBlog.forms import RegistrationForm, LoginForm, RetailerForm, UpdateAccountForm, UpdateProductsForm, PurchaseForm
-from FlaskBlog.models import User, Post, ProductItem, PurchaseInfo
+from FlaskBlog.forms import RegistrationForm, LoginForm, RetailerForm, UpdateAccountForm, UpdateProductsForm, PurchaseForm, CommentForm
+from FlaskBlog.models import User, Post, ProductItem, PurchaseInfo, Comments
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -188,12 +188,14 @@ def post(post_id):
 
     post = Post.query.get_or_404(post_id)
     products = ProductItem.query.all()
+    purchased = PurchaseInfo.query.all()
+    comments = Comments.query.all()
     specific_products=[]
     for product in products:
         if product.user_id == post.user_id:
             specific_products.append(product)
 
-    return render_template('post.html', title=post.title, post=post, specific_products=specific_products)
+    return render_template('post.html', title=post.title, post=post, specific_products=specific_products, purchased=purchased, comments=comments)
 
 @app.route('/confirmorder/<int:product_id>/<int:post_id>', methods=['GET','POST'])
 @login_required
@@ -207,9 +209,23 @@ def confirmorder(product_id, post_id):
         db.session.commit()
         flash('Succesfully Purchased!', 'success')
         return redirect(url_for('home'))
-
+    elif request.method == 'GET':
+        form.delivery.data = 'Pick Up'
     return render_template('confirmorder.html', product=product, form=form)
 
+@app.route('/comments/<int:post_id>', methods=['GET','POST'])
+@login_required
+def comments(post_id):
+    form = CommentForm()
+    post = Post.query.get_or_404(post_id)
+
+    if form.validate_on_submit():
+        comment = Comments(title_comment=form.title.data, comment=form.comment.data, personwhocommented=current_user,  farm_got_commented=post)
+        db.session.add(comment)
+        db.session.commit()
+        flash('Success!', 'success')
+        return redirect(url_for('post', post_id=post_id))
+    return render_template('comments.html', form=form)
 
 
 """
