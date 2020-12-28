@@ -35,7 +35,7 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user_order_farms = db.relationship('PurchaseInfo', backref='farm_that_sold', lazy=True)
     user_order_comment_farms = db.relationship('Comments', backref='farm_got_commented', lazy=True)
-
+    city = db.Column(db.String(20), nullable=False, default='Torino')
 
     def __repr__(self):
         return "Post(%r, %r)" % (self.title, self.date_posted)

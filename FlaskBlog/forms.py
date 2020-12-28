@@ -27,6 +27,7 @@ class RetailerForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators = [DataRequired()])
     picture = FileField('Update Farm Picture', validators=[FileAllowed(['png', 'jpg'])])
+    city = StringField('City', validators=[DataRequired()])
     submit = SubmitField('Post')
 
 

@@ -30,7 +30,7 @@ def producer_required(func):
 
 @app.route('/home')
 def home():
-    posts = Post.query.all()
+    posts = Post.query.filter_by(city='Torino')
     return render_template('home.html', posts=posts)
 
 @app.route('/')
@@ -108,10 +108,12 @@ def save_picture(form_picture):
 def account():
     form = UpdateAccountForm()
     purchaseinfo = PurchaseInfo.query.filter_by(user_id=current_user.id).all()
+    purchaseinfo_producer = PurchaseInfo.query.all()
+
     #products = ProductItem.query.filter_by(user_id=current_user.id).all()
     products = ProductItem.query.all()
     posts = Post.query.all()
-
+    users = User.query.all()
 
     if form.validate_on_submit():
         if form.picture.data:
@@ -128,7 +130,9 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static', filename='Pics/' + current_user.image_file)
-    return render_template('account.html', title='Account', image_file=image_file, form=form, purchaseinfo=purchaseinfo, posts=posts, products=products)
+    return render_template('account.html', title='Account', image_file=image_file, form=form,
+                           purchaseinfo=purchaseinfo, posts=posts, products=products,
+                           users=users, purchaseinfo_producer=purchaseinfo_producer)
 
 
 
@@ -144,7 +148,7 @@ def create_farm():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
-        post = Post(title=form.title.data, content=form.content.data, image_farm_file=picture_file, author=current_user)
+        post = Post(title=form.title.data, content=form.content.data, image_farm_file=picture_file, city=form.city.data, author=current_user)
 
         db.session.add(post)
         current_user.check = 1
@@ -154,12 +158,12 @@ def create_farm():
         image_farm_file = url_for('static', filename='Pics/' + post.image_farm_file)
         return redirect(url_for('home', image=image_farm_file))
     elif request.method == 'GET':
-        if Post.query.filter_by(user_id=current_user.id).first():
-            post1 = Post.query.filter_by(user_id=current_user.id).first()
-            form.title.data = post1.title
-            form.content.data = post1.content
+        form.city.data = 'Torino'
+     #   if Post.query.filter_by(user_id=current_user.id).first():
+    #      post1 = Post.query.filter_by(user_id=current_user.id).first()
 
     return render_template('create_retailer.html', form=form)
+
 """
 @app.route('/update_farm', methods=['GET','POST'])
 @login_required
@@ -188,8 +192,11 @@ def post(post_id):
 
     post = Post.query.get_or_404(post_id)
     products = ProductItem.query.all()
-    purchased = PurchaseInfo.query.all()
-    comments = Comments.query.all()
+    purchased = PurchaseInfo.query.filter_by(user_id=current_user.id, post_id=post.id)
+    #comments = Comments.query.all()
+    comments = Comments.query.filter_by(farm_got_commented=post)
+
+
     specific_products=[]
     for product in products:
         if product.user_id == post.user_id:
@@ -226,6 +233,43 @@ def comments(post_id):
         flash('Success!', 'success')
         return redirect(url_for('post', post_id=post_id))
     return render_template('comments.html', form=form)
+
+
+@app.route('/update_post/<int:post_id>', methods=['POST','GET'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = RetailerForm()
+    if form.validate_on_submit():
+        picture_file = save_picture(form.picture.data)
+        post.title = form.title.data
+        post.content = form.content.data
+        post.image_farm_file = picture_file
+        post.city = form.city.data
+        db.session.commit()
+        flash('Farm details have been changed!', 'success')
+        return redirect(url_for('post', post_id=post_id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+        form.city.data = post.city
+    return render_template('update_farm.html', post=post, form=form)
+
+@app.route('/post/<int:post_id>/delete', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    all_comments = Comments.query.filter_by(post_id=post_id).first()
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.delete(all_comments)
+
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))
 
 
 """

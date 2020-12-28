@@ -41,6 +41,53 @@
     </div>
         {% endif %}
 
+    {% if current_user.role == 'producer' %}
+              <!-- My Orders Dropdown Page HERE -->
+
+    <div class="mb-4" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="card">
+        <div class="card-header" role="tab" id="headingOne">
+          <h5 class="mb-0">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">My Orders</a>
+          </h5>
+        </div>
+
+        <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+          <div class="card-body">
+            {% if purchaseinfo_producer %}
+
+                {% for purchased in purchaseinfo_producer %}
+                    {% for post in posts %}
+                        {% for product in products %}
+                            {% for user in users %}
+
+                               {% if purchased.post_id == post.id and purchased.good_id == product.id and user.id == purchased.user_id and current_user.id == post.user_id %}
+                                    <li class="list-group-item">
+                                        <h5>You have an order from your farm: From->{{ user.email }}, Item->{{ product.name }}, Delivery method->{{ purchased.delivery }} </h5>
+                                    </li>
+                               {% endif%}
+                            {% endfor %}
+
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+
+            {% else %}
+                <p>you don't have orders</p>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+        {% endif %}
+
+
+
+
+
+
+
           <!-- Profile pic HERE -->
 
     <div class="content-section">
