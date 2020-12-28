@@ -10,56 +10,94 @@
                 </a>
               </div>
               <div class="col-lg-6">
-                 {% if current_user.role == 'producer' %}
-                    <!-- Update FARM DETAILS! -->
-                     <article class="media content-section">
-                          <div class="media-body">
-                            <div class="article-metadata">
-                              {% if post.author == current_user %}
-                                <div>
-                                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
-                                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                    {% if current_user.role == 'producer' %}
+                                <!-- Update FARM DETAILS! -->
+                                 <article class="media content-section">
+                                      <div class="media-body">
+                                        <div class="article-metadata">
+                                          {% if post.author == current_user %}
+                                            <div>
+                                                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+                                                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                                            </div>
+                                          {% endif %}
+                                        </div>
+                                        <h2 class="article-title">{{ post.title }}</h2>
+                                          <p class="article-content">{{ post.content }}</p>
+                                      </div>
+                                </article>
+
+                                 <!-- Modal -->
+                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Delete Farm?</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        Are you sure you want to delete, the whole farm as well as its contents will be deleted ?
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+                                            <input class="btn btn-danger" type="submit" value="Delete">
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                              {% endif %}
-                            </div>
-                            <h2 class="article-title">{{ post.title }}</h2>
-                              <p class="article-content">{{ post.content }}</p>
-                          </div>
-                    </article>
-
-                     <!-- Modal -->
-                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Delete Farm?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            Are you sure you want to delete, the whole farm as well as its contents will be deleted ?
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
-                                <input class="btn btn-danger" type="submit" value="Delete">
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                  {% endif %}
-
               </div>
 
-    {% if current_user.role == 'producer' %}
-                    <!-- Update FARM DETAILS! -->
+                                                <!-- Delete button for bundle -->
+             <div class="col-lg-6">
+                     {% if current_user.role == 'producer' %}
+                         {% for product in specific_products %}
+                                    <!-- Update FARM DETAILS! -->
+                                     <article class="media content-section">
+                                          <div class="media-body">
+                                            <div class="article-metadata">
+                                              {% if post.author == current_user %}
+                                                <div>
+                                                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal1">Delete</button>
+                                                </div>
+                                              {% endif %}
+                                            </div>
+                                          </div>
+                                    </article>
+
+                                     <!-- Modal -->
+
+                                    <div class="modal fade" id="deleteModal1" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Delete Bundle?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            Are you sure you want to delete the bundle ?
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <form action="{{ url_for('delete_bundle', product_id=product.id) }}" method="POST">
+                                                <input class="btn btn-danger" type="submit" value="Delete">
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                         {% endfor %}
+                    {% endif %}
+             </div>
 
 
-    {% endif %}
-                        <!-- Content Row -->
+            <!-- Content Row -->
             {% for product in specific_products %}
 
                 <div class="col-lg-4 mb-4">
@@ -78,49 +116,35 @@
                       </ul>
                     </div>
                 </div>
-
             {% endfor %}
             </div>
 
 
-  <legend class="border-bottom mb-4"><h2>Comments</h2></legend>
-{% if purchased[0] %}
 
-           <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Leave a Comment:</h5>
-          <div class="card-body">
-            <form>
-                <a href="{{ url_for('comments', post_id=post.id) }}" class="btn btn-primary">Leave a Comment</a>
-            </form>
+
+              <legend class="border-bottom mb-4"><h2>Comments</h2></legend>
+              {% if purchased[0] %}
+                        <!-- Comments Form -->
+                            <div class="card my-4">
+                              <h5 class="card-header">Leave a Comment:</h5>
+                              <div class="card-body">
+                                <form>
+                                    <a href="{{ url_for('comments', post_id=post.id) }}" class="btn btn-primary">Leave a Comment</a>
+                                </form>
+                              </div>
+                            </div>
+              {% endif %}
+              {% for com in comments %}
+                        <!-- Single Comment -->
+                        <div class="media mb-4">
+                          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                          <div class="media-body">
+                            <h5 class="mt-0">{{ com.title_comment }}</h5>
+                          {{ com.comment }}
+                          </div>
+                        </div>
+              {% endfor %}
           </div>
-        </div>
-
-{% endif %}
-
-            {% for com in comments %}
-                <!-- Single Comment -->
-                <div class="media mb-4">
-                  <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                  <div class="media-body">
-                    <h5 class="mt-0">{{ com.title_comment }}</h5>
-                  {{ com.comment }}
-                  </div>
-                </div>
-            {% endfor %}
-
-
-
-          </div>
-        </div>
-          </div>
-
-
-
-
-
-          </div>
-        </div>
-
+    </div>
 
 {% endblock content %}

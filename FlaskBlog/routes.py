@@ -202,7 +202,8 @@ def post(post_id):
         if product.user_id == post.user_id:
             specific_products.append(product)
 
-    return render_template('post.html', title=post.title, post=post, specific_products=specific_products, purchased=purchased, comments=comments)
+    return render_template('post.html', title=post.title, post=post,
+                           specific_products=specific_products, purchased=purchased, comments=comments)
 
 @app.route('/confirmorder/<int:product_id>/<int:post_id>', methods=['GET','POST'])
 @login_required
@@ -261,7 +262,7 @@ def update_post(post_id):
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
-    all_comments = Comments.query.filter_by(post_id=post_id).first()
+    all_comments = Comments.query.filter_by(post_id=post.id).first()
     if post.author != current_user:
         abort(403)
     db.session.delete(post)
@@ -271,6 +272,16 @@ def delete_post(post_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
 
+@app.route('/deletebundle/<int:product_id>/', methods=['POST'])
+@login_required
+def delete_bundle(product_id):
+    product = ProductItem.query.get_or_404(product_id)
+    if product.user_id != current_user.id:
+        abort(403)
+    db.session.delete(product)
+    db.session.commit()
+    flash('Your bundle has been deleted!', 'success')
+    return redirect(url_for('home'))
 
 """
 @app.route("/upload",methods=["POST","GET"])
