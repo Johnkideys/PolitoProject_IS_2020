@@ -103,6 +103,7 @@ def save_picture(form_picture):
 
     return picture_fn
 
+
 @app.route('/account', methods=['GET','POST'])
 @login_required
 def account():
@@ -257,27 +258,41 @@ def update_post(post_id):
         form.content.data = post.content
         form.city.data = post.city
     return render_template('update_farm.html', post=post, form=form)
-
-@app.route('/post/<int:post_id>/delete', methods=['POST'])
+"""
+@app.route('/post/<int:post_id>/delete', methods=['GET','POST'])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
-    all_comments = Comments.query.filter_by(post_id=post.id).first()
     if post.author != current_user:
         abort(403)
-    db.session.delete(post)
-    db.session.delete(all_comments)
+    all_comments = Comments.query.filter_by(post_id=post_id).all()
+    purchase = PurchaseInfo.query.filter_by(post_id=post_id).all()
+    if all_comments:
+        db.session.delete(all_comments)
+        db.session.commit()
+    if purchase:
+        db.session.delete(all_comments)
+        db.session.commit()
+    if post.author != current_user:
+        abort(403)
 
+    db.session.delete(post)
     db.session.commit()
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
-
-@app.route('/deletebundle/<int:product_id>/', methods=['POST'])
+"""
+@app.route('/deletebundle/<int:product_id>', methods=['POST'])
 @login_required
 def delete_bundle(product_id):
-    product = ProductItem.query.get_or_404(product_id)
-    if product.user_id != current_user.id:
-        abort(403)
+
+    product = ProductItem.query.filter_by(id=product_id).first()
+    purchase = PurchaseInfo.query.filter_by(good_id=product_id).first()
+    if purchase:
+        db.session.delete(purchase)
+        db.session.commit()
+    #product = ProductItem.query.get_or_404(3)
+    #if product.user_id != current_user.id:
+    #    abort(403)
     db.session.delete(product)
     db.session.commit()
     flash('Your bundle has been deleted!', 'success')
