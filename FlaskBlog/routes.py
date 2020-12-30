@@ -285,17 +285,23 @@ def delete_post(post_id):
 @login_required
 def delete_bundle(product_id):
 
-    product = ProductItem.query.filter_by(id=product_id).first()
+    #product = ProductItem.query.filter_by(id=product_id).first()
+    product = ProductItem.query.filter_by(user_id=current_user.id).all()
+
     purchase = PurchaseInfo.query.filter_by(good_id=product_id).first()
     if purchase:
         db.session.delete(purchase)
         db.session.commit()
-    #product = ProductItem.query.get_or_404(3)
     #if product.user_id != current_user.id:
     #    abort(403)
-    db.session.delete(product)
-    db.session.commit()
-    flash('Your bundle has been deleted!', 'success')
+    for i in range(len(product)):
+        if product[i].id == product_id:
+            db.session.delete(product)
+            db.session.commit()
+            flash('Your bundle has been deleted!', 'success')
+
+
+    #flash('Your bundle has been deleted!', 'success')
     return redirect(url_for('home'))
 
 """

@@ -47,6 +47,7 @@
              <div class="col-lg-6">
                      {% if current_user.role == 'producer' %}
                          {% for product in specific_products %}
+
                                     <!-- Update FARM DETAILS! -->
                                      <article class="media content-section">
                                           <div class="media-body">
@@ -55,7 +56,7 @@
                                                 <div>
                                                     <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal1">Delete</button>
                                                 </div>
-                                              {% endif %}
+                                                {% endif %}
                                             </div>
                                           </div>
                                     </article>
@@ -83,8 +84,10 @@
                                         </div>
                                       </div>
                                     </div>
+
                          {% endfor %}
                     {% endif %}
+
              </div>
 
 
