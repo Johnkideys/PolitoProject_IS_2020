@@ -43,10 +43,18 @@
                     {% endif %}
             </div>
 
-                                                <!-- Delete button for bundle -->
+
+
+            <!-- Content Row -->
+            {% for product in specific_products %}
+
+                <div class="col-lg-4 mb-4">
+                    <div class="card h-100">
+
+
+                        <!-- Delete button for bundle -->
              <div class="col-lg-6">
                      {% if current_user.role == 'producer' %}
-                            {% for product in specific_products %}
 
                                     <!-- Update FARM DETAILS! -->
                                      <article class="media content-section">
@@ -83,18 +91,8 @@
                                         </div>
                                       </div>
                                     </div>
-
-                         {% endfor %}
                     {% endif %}
-
              </div>
-
-
-            <!-- Content Row -->
-            {% for product in specific_products %}
-
-                <div class="col-lg-4 mb-4">
-                    <div class="card h-100">
 
 
                         <h3 class="card-header">{{ product.name }}</h3>
