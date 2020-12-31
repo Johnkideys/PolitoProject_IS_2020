@@ -203,8 +203,10 @@ def post(post_id):
         if product.user_id == post.user_id:
             specific_products.append(product)
 
+    num = len(specific_products)
+    num_range = range(num)
     return render_template('post.html', title=post.title, post=post,
-                           specific_products=specific_products, purchased=purchased, comments=comments)
+                           specific_products=specific_products, purchased=purchased, comments=comments, num=num, num_range=num_range)
 
 @app.route('/confirmorder/<int:product_id>/<int:post_id>', methods=['GET','POST'])
 @login_required
@@ -284,7 +286,6 @@ def delete_post(post_id):
 @app.route('/deletebundle/<int:product_id>', methods=['POST'])
 @login_required
 def delete_bundle(product_id):
-
     #product = ProductItem.query.filter_by(id=product_id).first()
     product = ProductItem.query.filter_by(user_id=current_user.id).all()
 
@@ -294,14 +295,19 @@ def delete_bundle(product_id):
         db.session.commit()
     #if product.user_id != current_user.id:
     #    abort(403)
+    #if request.form.get("submit_button_23"):
+    #   pass
+
+
     for i in range(len(product)):
         if product[i].id == product_id:
-            db.session.delete(product)
+            db.session.delete(product[i])
             db.session.commit()
             flash('Your bundle has been deleted!', 'success')
+        else:
+            flash('Yvljdnjonntjoqrvn!', 'success')
 
 
-    #flash('Your bundle has been deleted!', 'success')
     return redirect(url_for('home'))
 
 """

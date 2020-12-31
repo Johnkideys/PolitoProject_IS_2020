@@ -46,7 +46,7 @@
                                                 <!-- Delete button for bundle -->
              <div class="col-lg-6">
                      {% if current_user.role == 'producer' %}
-                         {% for product in specific_products %}
+                            {% for product in specific_products %}
 
                                     <!-- Update FARM DETAILS! -->
                                      <article class="media content-section">
@@ -54,20 +54,19 @@
                                             <div class="article-metadata">
                                               {% if post.author == current_user %}
                                                 <div>
-                                                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal1">Delete</button>
-                                                </div>
+                                                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal1" >Delete</button>
+                                                    </div>
                                                 {% endif %}
                                             </div>
                                           </div>
                                     </article>
-
                                      <!-- Modal -->
 
                                     <div class="modal fade" id="deleteModal1" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                       <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                           <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel">Delete Bundle?</h5>
+                                            <h5 class="modal-title" id="deleteModalLabel">Delete {{ product }}?</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                               <span aria-hidden="true">&times;</span>
                                             </button>
@@ -78,7 +77,7 @@
                                           <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             <form action="{{ url_for('delete_bundle', product_id=product.id) }}" method="POST">
-                                                <input class="btn btn-danger" type="submit" value="Delete">
+                                                <input class="btn btn-danger" name="submit_button_23" type="submit" value="Delete">
                                             </form>
                                           </div>
                                         </div>
