@@ -8,10 +8,6 @@ from FlaskBlog.models import User, Post, ProductItem, PurchaseInfo, Comments
 from flask_login import login_user, current_user, logout_user, login_required
 
 
-
-#this is my change
-#this is my 2nd change
-#this is my 3rd change
 from functools import wraps
 def producer_required(func):
     """
@@ -111,7 +107,6 @@ def account():
     purchaseinfo = PurchaseInfo.query.filter_by(user_id=current_user.id).all()
     purchaseinfo_producer = PurchaseInfo.query.all()
 
-    #products = ProductItem.query.filter_by(user_id=current_user.id).all()
     products = ProductItem.query.all()
     posts = Post.query.all()
     users = User.query.all()
@@ -160,18 +155,11 @@ def create_farm():
         return redirect(url_for('home', image=image_farm_file))
     elif request.method == 'GET':
         form.city.data = 'Torino'
-     #   if Post.query.filter_by(user_id=current_user.id).first():
-    #      post1 = Post.query.filter_by(user_id=current_user.id).first()
+
 
     return render_template('create_retailer.html', form=form)
 
-"""
-@app.route('/update_farm', methods=['GET','POST'])
-@login_required
-@producer_required
-def update_farm():
-    return render_template('')
-"""
+
 @app.route('/add_products_farm', methods=['GET','POST'])
 @login_required
 @producer_required
@@ -260,6 +248,27 @@ def update_post(post_id):
         form.content.data = post.content
         form.city.data = post.city
     return render_template('update_farm.html', post=post, form=form)
+
+@app.route('/deletebundle/<int:product_id>', methods=['POST'])
+@login_required
+def delete_bundle(product_id):
+    product = ProductItem.query.filter_by(user_id=current_user.id).all()
+
+    purchase = PurchaseInfo.query.filter_by(good_id=product_id).first()
+    if purchase:
+        db.session.delete(purchase)
+        db.session.commit()
+    #if product.user_id != current_user.id:
+    #    abort(403)
+
+    for i in range(len(product)):
+        if product[i].id == product_id:
+            db.session.delete(product[i])
+            db.session.commit()
+            flash('Your bundle has been deleted!', 'success')
+
+    return redirect(url_for('home'))
+
 """
 @app.route('/post/<int:post_id>/delete', methods=['GET','POST'])
 @login_required
@@ -283,32 +292,7 @@ def delete_post(post_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
 """
-@app.route('/deletebundle/<int:product_id>', methods=['POST'])
-@login_required
-def delete_bundle(product_id):
-    #product = ProductItem.query.filter_by(id=product_id).first()
-    product = ProductItem.query.filter_by(user_id=current_user.id).all()
 
-    purchase = PurchaseInfo.query.filter_by(good_id=product_id).first()
-    if purchase:
-        db.session.delete(purchase)
-        db.session.commit()
-    #if product.user_id != current_user.id:
-    #    abort(403)
-    #if request.form.get("submit_button_23"):
-    #   pass
-
-
-    for i in range(len(product)):
-        if product[i].id == product_id:
-            db.session.delete(product[i])
-            db.session.commit()
-            flash('Your bundle has been deleted!', 'success')
-        else:
-            flash('Yvljdnjonntjoqrvn!', 'success')
-
-
-    return redirect(url_for('home'))
 
 """
 @app.route("/upload",methods=["POST","GET"])
