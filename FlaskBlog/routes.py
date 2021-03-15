@@ -23,8 +23,6 @@ def producer_required(func):
         return func(*args, **kwargs)
     return decorated_view
 
-
-
 @app.route('/home')
 def home():
     posts = Post.query.filter_by(city='Torino')
@@ -34,7 +32,6 @@ def home():
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 @app.route('/registeruser', methods=['GET','POST'])
 def registeruser():
@@ -64,7 +61,6 @@ def registerproducer():
         flash('Account is created, you can now Sign In!','success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
-
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -131,48 +127,6 @@ def account():
                            purchaseinfo=purchaseinfo, posts=posts, products=products,
                            users=users, purchaseinfo_producer=purchaseinfo_producer)
 
-
-def send_mail(to, subject, template, **kwargs):
-    msg = Message(subject,
-                  recipients=[to],
-                  sender='noreply@demo.com')
-    msg.body = render_template(template + '.txt', **kwargs)
-    msg.html = render_template(template + '.html', **kwargs)
-    mail.send(msg)
-
-@app.route('/reset_password', methods=['GET','POST'])
-def reset_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    #form = RequestResetForm()
-    #if form.validate_on_submit(): #8 at this point they've submitted an email for that form so let's grab the user that email
-        #user = User.query.filter_by(email=form.email.data).first()
-
-        #send_reset_email(user)
-    send_mail('johnkideys@gmail.com', 'hi i am a test mail', 'mail', user='john')
-
-    flash('An email has been sent with instructions to reset your password.','info')
-    return redirect(url_for('login'))
-    #return render_template('reset_request.html', title= 'Reset Password', form= form)
-
-@app.route('/reset_password/<token>', methods=['GET','POST'])
-def reset_token(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    user = User.verify_reset_token(token) #if we don't get a token right here, it means that is invalid or expired
-    if user is None:
-        flash('Invalid or expired token','warning')
-        return redirect(url_for(reset_request))
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        user.password = hashed_password
-        db.session.commit()
-        flash('Your password has been updated, you can now Login!','success')
-        return redirect(url_for('login'))
-    #now let's go to the login html page and add the href next to the Forgot password
-    return render_template('reset_token.html', title= 'Reset Password', form= form)
-
 @app.route('/create_farm', methods=['GET','POST'])
 @login_required
 @producer_required
@@ -197,9 +151,7 @@ def create_farm():
     elif request.method == 'GET':
         form.city.data = 'Torino'
 
-
     return render_template('create_retailer.html', form=form)
-
 
 @app.route('/add_products_farm', methods=['GET','POST'])
 @login_required
@@ -223,9 +175,7 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
     products = ProductItem.query.all()
     purchased = PurchaseInfo.query.filter_by(user_id=current_user.id, post_id=post.id)
-    #comments = Comments.query.all()
     comments = Comments.query.filter_by(farm_got_commented=post)
-
 
     specific_products=[]
     for product in products:
@@ -267,7 +217,6 @@ def comments(post_id):
         return redirect(url_for('post', post_id=post_id))
     return render_template('comments.html', form=form)
 
-
 @app.route('/update_post/<int:post_id>', methods=['POST','GET'])
 @login_required
 def update_post(post_id):
@@ -276,10 +225,11 @@ def update_post(post_id):
         abort(403)
     form = RetailerForm()
     if form.validate_on_submit():
-        picture_file = save_picture(form.picture.data)
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            post.image_farm_file = picture_file
         post.title = form.title.data
         post.content = form.content.data
-        post.image_farm_file = picture_file
         post.city = form.city.data
         db.session.commit()
         flash('Farm details have been changed!', 'success')
@@ -310,6 +260,14 @@ def delete_bundle(product_id):
 
     return redirect(url_for('home'))
 
+def send_mail(to, subject, template, **kwargs):
+    msg = Message(subject,
+                  recipients=[to],
+                  sender='noreply@demo.com')
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
+
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
@@ -321,10 +279,10 @@ def send_reset_email(user):
     '''.format(y=url_for('reset_token', token=token, _external=True))
     mail.send(msg)
 
-@app.route('/reset_password', methods=['GET','POST'])
+@app.route('/reset_password', methods=['POST','GET'])
 def reset_request():
-    if current_user.is_authenticated():
-        return redirect(url_for('home'))
+    #if current_user.is_authenticated():
+    #    return redirect(url_for('home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -336,7 +294,7 @@ def reset_request():
 @app.route('/reset_password/<token>', methods=['GET','POST'])
 def reset_token(token):
     if current_user.is_authenticated():
-        return redirect(url_for('home'))
+       return redirect(url_for('home'))
     user = User.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
@@ -349,42 +307,3 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form )
-"""
-@app.route('/post/<int:post_id>/delete', methods=['GET','POST'])
-@login_required
-def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    if post.author != current_user:
-        abort(403)
-    all_comments = Comments.query.filter_by(post_id=post_id).all()
-    purchase = PurchaseInfo.query.filter_by(post_id=post_id).all()
-    if all_comments:
-        db.session.delete(all_comments)
-        db.session.commit()
-    if purchase:
-        db.session.delete(all_comments)
-        db.session.commit()
-    if post.author != current_user:
-        abort(403)
-
-    db.session.delete(post)
-    db.session.commit()
-    flash('Your post has been deleted!', 'success')
-    return redirect(url_for('home'))
-"""
-
-
-"""
-@app.route("/upload",methods=["POST","GET"])
-def upload():
-    if not os.path.exists('static/'+ str(session.get('id'))):
-        os.makedirs('static/'+ str(session.get('id')))
-    file_url = os.listdir('static/'+ str(session.get('id')))
-    file_url = [ str(session.get('id')) + "/" + file for file in file_url ]
-    formupload = UploadForm()
-    print session.get('email')
-    if formupload.validate_on_submit():
-        filename = photos.save(formupload.file.data, name=str(session.get('id'))+'.jpg', folder=str(session.get('id')))
-        file_url.append(filename)
-    return render_template("upload.html", formupload=formupload, filelist=file_url)
-"""

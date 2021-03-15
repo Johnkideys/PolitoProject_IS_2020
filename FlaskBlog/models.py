@@ -3,13 +3,9 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from FlaskBlog import db, login_manager, app
 from flask_login import UserMixin, current_user
 
-
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
-
-
-
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +24,7 @@ class User(db.Model, UserMixin):
         return "User(%r, %r, %r)" % (self.username, self.email, self.image_file)
 
     def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET KEY'], expires_sec)
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
@@ -65,8 +61,6 @@ class ProductItem(db.Model):
     price = db.Column(db.Float, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     cartitems = db.relationship('PurchaseInfo', backref='product_name', lazy=True)
-
-    #cartitems = db.relationship('CartItem', backref='Product')
 
     def __repr__(self):
         return '<ProductName %r>' % self.name
