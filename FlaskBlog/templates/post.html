@@ -9,82 +9,86 @@
                   <img class="img-fluid rounded" src={{ url_for('static', filename='Pics/' + post.image_farm_file) }}>
                 </a>
               </div>
-              <div class="col-lg-6">
-                    {% if current_user.role == 'producer' %}
-                                <!-- Update FARM DETAILS! -->
-                                 <article class="media content-section">
-                                      <div class="media-body">
-                                        <div class="article-metadata">
-                                          {% if post.author == current_user %}
-                                            <div>
-                                                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
-                                            </div>
-                                          {% endif %}
-                                        </div>
-                                        <h2 class="article-title">{{ post.title }}</h2>
-                                          <p class="article-content">{{ post.content }}</p>
-                                      </div>
-                                </article>
-                 {% endif %}
-              </div>
 
-
-            <div class="col-lg-6">
-                    {% if current_user.role == 'user' %}
-                                <!-- User sees FARM DETAILS! -->
-                                 <article class="media content-section">
-                                      <div class="media-body">
-                                           <div class="article-metadata">
-                                            <h2 class="article-title">{{ post.title }}</h2>
-                                            <p class="article-content">{{ post.content }}</p>
-                                           </div>
-                                      </div>
-                                </article>
-                    {% endif %}
-            </div>
+                                {% if current_user.role == 'producer' %}
+                                            <!-- Update FARM DETAILS! -->
+                                             <article class="media content-section">
+                                                  <div class="media-body">
+                                                    <div class="article-metadata">
+                                                      {% if post.author == current_user %}
+                                                        <div>
+                                                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+                                                        </div>
+                                                      {% endif %}
+                                                    </div>
+                                                    <h2 class="article-title">{{ post.title }}</h2>
+                                                      <p class="article-content">{{ post.content }}</p>
+                                                  </div>
+                                            </article>
+                             {% endif %}
 
 
 
-            <!-- Content Row -->
-            {% for product in specific_products %}
-
-            <div class="col-lg-4 mb-4">
-                <div class="card h-100">
-                        <!-- Delete button for bundle -->
-                <div class="col-lg-6">
-                     {% if current_user.role == 'producer' %}
-                         <!-- Update FARM DETAILS! -->
-                         <article class="media content-section">
-                              <div class="media-body">
-                                <div class="article-metadata">
-                                    {% if post.author == current_user %}
-                                        <div>
-                                        <form action="{{ url_for('delete_bundle', product_id=product.id) }}" method="post">
-                                            <input class="btn btn-danger" name="delete" type="submit" value="Delete">
-                                        </form>
-                                        </div>
+                            <div class="col-lg-6">
+                                    {% if current_user.role == 'user' %}
+                                                <!-- User sees FARM DETAILS! -->
+                                                 <article class="media content-section">
+                                                      <div class="media-body">
+                                                           <div class="article-metadata">
+                                                            <h2 class="article-title">{{ post.title }}</h2>
+                                                            <p class="article-content">{{ post.content }}</p>
+                                                           </div>
+                                                      </div>
+                                                </article>
                                     {% endif %}
-                                </div>
-                              </div>
-                         </article>
-                     {% endif %}
-                </div>
+                            </div>
 
-                <h3 class="card-header">{{ product.name }}</h3>
-
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">{{ product.descr }}</li>
-                        <li class="list-group-item">{{ product.price }}<h2>€</h2>per week</li>
-                            {% if current_user.role == 'user' %}
-                                <li class="list-group-item">
-                                    <a href="{{ url_for('confirmorder', product_id=product.id, post_id=post.id) }}" class="btn btn-primary">Buy</a>
-                                </li>
-                            {% endif %}
-                    </ul>
-                </div>
             </div>
-            {% endfor %}
-          </div>
+
+
+          <div class="row">
+                                <!-- Content Row -->
+                            {% for product in specific_products %}
+
+                            <div class="col-lg-4 mb-4">
+                                <div class="card h-100">
+                                        <!-- Delete button for bundle -->
+                                <div class="col-lg-6">
+                                     {% if current_user.role == 'producer' %}
+                                         <!-- Update FARM DETAILS! -->
+                                         <article class="media content-section">
+                                              <div class="media-body">
+                                                <div class="article-metadata">
+                                                    {% if post.author == current_user %}
+                                                        <div>
+                                                        <form action="{{ url_for('delete_bundle', product_id=product.id) }}" method="post">
+                                                            <input class="btn btn-danger" name="delete" type="submit" value="Delete">
+                                                        </form>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                              </div>
+                                         </article>
+                                     {% endif %}
+                                </div>
+
+                                <h3 class="card-header">{{ product.name }}</h3>
+
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">{{ product.descr }}</li>
+                                        <li class="list-group-item">{{ product.price }}<h2>€</h2>per week</li>
+                                            {% if current_user.role == 'user' %}
+                                                <li class="list-group-item">
+                                                    <a href="{{ url_for('confirmorder', product_id=product.id, post_id=post.id) }}" class="btn btn-primary">Buy</a>
+                                                </li>
+                                            {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endfor %}
+            </div>
+
+
 
 
 
