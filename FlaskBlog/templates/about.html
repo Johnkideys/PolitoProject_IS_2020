@@ -5,97 +5,152 @@
       <div class="container">
 
         <!-- Page Heading/Breadcrumbs -->
-        <h1 class="mt-4 mb-3">About
-          <small>Subheading</small>
+        <h1 class="mt-4 mb-3">About Us
         </h1>
 
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
             <a href="index.html">Home</a>
           </li>
-          <li class="breadcrumb-item active">About</li>
+          <li class="breadcrumb-item active">AboutUs</li>
         </ol>
 
         <!-- Intro Content -->
         <div class="row">
           <div class="col-lg-6">
-            <img class="img-fluid rounded mb-4" src="http://placehold.it/750x450" alt="">
+            <img class="img-fluid rounded mb-4" src={{ url_for('static', filename='Pics/langhe.png') }} alt="">
           </div>
           <div class="col-lg-6">
-            <h2>About Modern Business</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed voluptate nihil eum consectetur similique? Consectetur, quod, incidunt, harum nisi dolores delectus reprehenderit voluptatem perferendis dicta dolorem non blanditiis ex fugiat.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe, magni, aperiam vitae illum voluptatum aut sequi impedit non velit ab ea pariatur sint quidem corporis eveniet. Odit, temporibus reprehenderit dolorum!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, consequuntur, modi mollitia corporis ipsa voluptate corrupti eum ratione ex ea praesentium quibusdam? Aut, in eum facere corrupti necessitatibus perspiciatis quis?</p>
+            <h2>FarmGo Purpose</h2>
+            <p>Farmgo is a new way of thinking the food supply chain, a revolutionary approach which perfectly meet the requirements of ‘enlighted’ consumers for whom quality and sustainability are crucial issues. </p>
+            <p>Our purpose is to allow the users of the platform to search for local firms and producers which respect their standards in term of quality, production system and taste.</p>
+            <p>We allow our users to directly interact with registered firms so that they can create, based on needs and lifestyle, the perfect basket and deliver it each day, week or month with a significant cut in logistics management. </p>
           </div>
         </div>
         <!-- /.row -->
+
+
+
 
         <!-- Team Members -->
-        <h2>Our Team</h2>
+        <h2>The Team</h2>
 
+        <!-- AlbertoInfo -->
         <div class="row">
           <div class="col-lg-4 mb-4">
             <div class="card h-100 text-center">
-              <img class="card-img-top" src="http://placehold.it/750x450" alt="">
+              <img class="card-img-top" src={{ url_for('static', filename='Pics/Alberto.jpg') }} alt="">
               <div class="card-body">
-                <h4 class="card-title">Team Member</h4>
-                <h6 class="card-subtitle mb-2 text-muted">Position</h6>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus aut mollitia eum ipsum fugiat odio officiis odit.</p>
+                <h4 class="card-title">Alberto</h4>
+                <h6 class="card-subtitle mb-2 text-muted">Team leader</h6>
+                <p class="card-text">Frontman and leader of the group; he takes care about interaction among external and internal actors. He is part of management and validates all modification in the project.</p>
               </div>
               <div class="card-footer">
-                <a href="#">name@example.com</a>
+                <a href="#">s288872@studenti.polito.it</a>
+              </div>
+           </div>
+          </div>
+            <!-- GiulioInfo -->
+          <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+              <img class="card-img-top" src={{ url_for('static', filename='Pics/giulio.jpg') }} alt="">
+              <div class="card-body">
+                <h4 class="card-title">Giulio and Alessandro</h4>
+                <h6 class="card-subtitle mb-2 text-muted">Management team</h6>
+                <p class="card-text">Their aim is to deal with all management issues such as LBMC, Feasability study and Life cycle developement. They interact with shareholders and have an eye at market opportunities.</p>
+              </div>
+              <div class="card-footer">
+                <a href="#">s284885@studenti.polito.it</a>
               </div>
             </div>
           </div>
-          <div class="col-lg-4 mb-4">
+        <!-- AleInfo -->
+        <div class="col-lg-4 mb-4">
             <div class="card h-100 text-center">
-              <img class="card-img-top" src="http://placehold.it/750x450" alt="">
+              <img class="card-img-top" src={{ url_for('static', filename='Pics/Ale.jpg') }} alt="">
               <div class="card-body">
-                <h4 class="card-title">Team Member</h4>
-                <h6 class="card-subtitle mb-2 text-muted">Position</h6>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus aut mollitia eum ipsum fugiat odio officiis odit.</p>
+                <h4 class="card-title">Giosuè, Andres, John</h4>
+                <h6 class="card-subtitle mb-2 text-muted">Management team</h6>
+                <p class="card-text">Their aim is to deal with all management issues such as LBMC, Feasability study and Life cycle developement. They interact with shareholders and have an eye at market opportunities.</p>
               </div>
               <div class="card-footer">
-                <a href="#">name@example.com</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 mb-4">
-            <div class="card h-100 text-center">
-              <img class="card-img-top" src="http://placehold.it/750x450" alt="">
-              <div class="card-body">
-                <h4 class="card-title">Team Member</h4>
-                <h6 class="card-subtitle mb-2 text-muted">Position</h6>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus aut mollitia eum ipsum fugiat odio officiis odit.</p>
-              </div>
-              <div class="card-footer">
-                <a href="#">name@example.com</a>
+                <a href="#">s287919@studenti.polito.it</a>
               </div>
             </div>
           </div>
         </div>
+          <!-- /.row -->
+
+          <div class="row">
+          <!-- GiosueInfo -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+              <img class="card-img-top" src={{ url_for('static', filename='Pics/giosue1.jpg') }} alt="">
+              <div class="card-body">
+                <h4 class="card-title">Giosuè, Andres, John</h4>
+                <h6 class="card-subtitle mb-2 text-muted">IT team</h6>
+                <p class="card-text">The IT group implemented the FarmGo platform starting from UML diagrams and continuing, through an iterative process, with the implementation and coding of the website.</p>
+              </div>
+              <div class="card-footer">
+                <a href="#">s290052@studenti.polito.it</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- AndresInfo -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+              <img class="card-img-top" src={{ url_for('static', filename='Pics/andres.jpg') }} alt="">
+              <div class="card-body">
+                <h4 class="card-title">Giosuè, Andres, John</h4>
+                <h6 class="card-subtitle mb-2 text-muted">IT team</h6>
+                <p class="card-text">The IT group implemented the FarmGo platform starting from UML diagrams and continuing, through an iterative process, with the implementation and coding of the website.</p>
+              </div>
+              <div class="card-footer">
+                  <a href="#">s252900@studenti.polito.it</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- HasanjohnInfo -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+              <img class="card-img-top" src={{ url_for('static', filename='Pics/hasanjohn.png') }} alt="">
+              <div class="card-body">
+                <h4 class="card-title">Giosuè, Andres, John</h4>
+                <h6 class="card-subtitle mb-2 text-muted">IT team</h6>
+                <p class="card-text">The IT group implemented the FarmGo platform starting from UML diagrams and continuing, through an iterative process, with the implementation and coding of the website.</p>
+              </div>
+              <div class="card-footer">
+                  <a href="#">s290712@studenti.polito.it</a>
+              </div>
+            </div>
+          </div>
+       </div>
         <!-- /.row -->
 
+
+
         <!-- Our Customers -->
-        <h2>Our Customers</h2>
+        <h2>Our Products</h2>
         <div class="row">
           <div class="col-lg-2 col-sm-4 mb-4">
-            <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+            <img class="img-fluid" src={{ url_for('static', filename='Pics/beverage.png') }} alt="">
           </div>
           <div class="col-lg-2 col-sm-4 mb-4">
-            <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+            <img class="img-fluid" src={{ url_for('static', filename='Pics/meat.png') }} alt="">
           </div>
           <div class="col-lg-2 col-sm-4 mb-4">
-            <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+            <img class="img-fluid" src={{ url_for('static', filename='Pics/fruit.png') }} alt="">
           </div>
           <div class="col-lg-2 col-sm-4 mb-4">
-            <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+            <img class="img-fluid" src={{ url_for('static', filename='Pics/honey.png') }} alt="">
           </div>
           <div class="col-lg-2 col-sm-4 mb-4">
-            <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+            <img class="img-fluid" src={{ url_for('static', filename='Pics/cheese.png') }} alt="">
           </div>
           <div class="col-lg-2 col-sm-4 mb-4">
-            <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+            <img class="img-fluid" src={{ url_for('static', filename='Pics/vegetable.png') }} alt="">
           </div>
         </div>
         <!-- /.row -->

@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def verify_reset_token(token):
-        s = Serializer(app.config['SECRET KEY'])
+        s = Serializer(app.config['SECRET_KEY'])
         # the token could expired or something else so
         try:
             user_id = s.loads(token)['user_id']

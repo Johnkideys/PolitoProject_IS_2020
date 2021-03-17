@@ -69,7 +69,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                                   <a class="dropdown-item" href="{{ url_for('create_farm') }}">Create Farm</a>
+                                    {% if current_user.posts %}
                                   <a class="dropdown-item" href="{{ url_for('add_products_farm') }}">Add Products To Farm</a>
+                                    {% endif %}
                                 </div>
                         </li>
                      {% endif %}
